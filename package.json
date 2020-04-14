@@ -13,6 +13,6 @@
   "scripts": {
     "start": "AWS_PROFILE=hackney sls offline start -s dev --noAuth --noTimeout --port 3002",
     "debug": "export SLS_DEBUG=* && AWS_PROFILE=hackney node --inspect ./node_modules/serverless/bin/serverless offline -s dev --noAuth --noTimeout --port 3002",
-    "lint": "eslint --fix --ext js api/lib && echo 'Lint complete.'"
+    "lint": "eslint --fix --ext js api && echo 'Lint complete.'"
   }
 }
