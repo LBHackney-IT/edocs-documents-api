@@ -1,0 +1,24 @@
+New-Object : Exception calling ".ctor" with "0" argument(s): "Retrieving the COM class factory for component with CLSID
+ {BAE80C14-D2AC-11D0-8384-00A0C92018F4} failed due to the following error: 80040154."
+At C:\Users\cgyorfi\Downloads\edocs-documents-api-master\edocs-documents-api-master\test1.ps1:9 char:23
++ $PDCLogin = New-object <<<<  Hummingbird.DM.Server.Interop.PCDClient.PCDLoginClass
+    + CategoryInfo          : InvalidOperation: (:) [New-Object], MethodInvocationException
+    + FullyQualifiedErrorId : ConstructorInvokedThrowException,Microsoft.PowerShell.Commands.NewObjectCommand
+
+You cannot call a method on a null-valued expression.
+At C:\Users\cgyorfi\Downloads\edocs-documents-api-master\edocs-documents-api-master\test1.ps1:11 char:25
++ $rc = $PDCLogin.AddLogin <<<< (0, $library, 'ROOTWF', 'ROOTWF')
+    + CategoryInfo          : InvalidOperation: (AddLogin:String) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+
+You cannot call a method on a null-valued expression.
+At C:\Users\cgyorfi\Downloads\edocs-documents-api-master\edocs-documents-api-master\test1.ps1:12 char:24
++ $rc = $PDCLogin.Execute <<<< ()
+    + CategoryInfo          : InvalidOperation: (Execute:String) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+
+ScriptHalted
+At C:\Users\cgyorfi\Downloads\edocs-documents-api-master\edocs-documents-api-master\test1.ps1:15 char:9
++    throw <<<<  $PDCLogin.ErrDescription
+    + CategoryInfo          : OperationStopped: (:) [], RuntimeException
+    + FullyQualifiedErrorId : ScriptHalted
