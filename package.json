@@ -1,0 +1,18 @@
+{
+  "name": "edocs-documents-api",
+  "version": "1.0.0",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.18.2",
+    "serverless": "^1.66.0",
+    "serverless-offline": "^5.12.1",
+    "serverless-offline-ssm": "^4.1.2"
+  },
+  "scripts": {
+    "start": "AWS_PROFILE=hackney sls offline start -s dev --noAuth --noTimeout --port 3002",
+    "debug": "export SLS_DEBUG=* && AWS_PROFILE=hackney node --inspect ./node_modules/serverless/bin/serverless offline -s dev --noAuth --noTimeout --port 3002",
+    "lint": "eslint --fix --ext js api/lib && echo 'Lint complete.'"
+  }
+}
