@@ -23,6 +23,51 @@ service: edocs-documents-api
 provider:
   name: aws
   runtime: nodejs12.x
+  region: eu-west-2
+  stage: ${opt:stage}
+  profile: hackney
+  timeout: 15
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+  vpc:
+    securityGroupIds:
+      - sg-022acccbebd7bca46
+    subnetIds:
+      - subnet-00356e0650138f74f
+      - subnet-0a7f442c22a6feedc
+
+plugins:
+  - serverless-offline
+  - serverless-offline-ssm
+
+functions:
+  edocs-documents-api:
+    name: edocs-documents-api-${self:provider.stage}
+    role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
+    handler: api/index.handler
+    package:
+      exclude:
+        - '**'
+      include:
+        - api/index.js
+        - api/lib/**
+        - api/node_modules/**
+    events:
+      - http:
+          path: 'uhw/{proxy+}'
+          method: ANY
+          authorizer: ${self:custom.authorizer.w2-document-api-authorizer}
+          cors:
+            origins:
+              - '*'
+    environment:
+      URL_PREFIX: 'uhw'
+      S3_BUCKET_NAME: ${ssm:/uhw-document-api/production/S3_BUCKET_NAME}
+      W2_DB_URL: ${ssm:/uhw-document-api/production/W2_DB_URL}
+      W2_IMAGE_SERVER_URL: ${ssm:/uhw-document-api/production/W2_IMAGE_SERVER_URL}
+      ENV: ${self:provider.stage}
+      SENTRY_DSN: ${ssm:/uhw-document-api/SENTRY_DSN}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -111,3 +156,54 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+  hncomino-document-api:
+    name: hncomino-document-api-${self:provider.stage}
+    role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
+    handler: api/index.handler
+    package:
+      exclude:
+        - '**'
+      include:
+        - api/index.js
+        - api/lib/**
+        - api/node_modules/**
+    events:
+      - http:
+          path: 'hncomino/{proxy+}'
+          method: ANY
+          authorizer: ${self:custom.authorizer.w2-document-api-authorizer}
+          cors:
+            origins:
+              - '*'
+    environment:
+      URL_PREFIX: 'hncomino'
+      S3_BUCKET_NAME: ${ssm:/hncomino-document-api/production/S3_BUCKET_NAME}
+      W2_DB_URL: ${ssm:/hncomino-document-api/production/W2_DB_URL}
+      W2_IMAGE_SERVER_URL: ${ssm:/hncomino-document-api/production/W2_IMAGE_SERVER_URL}
+      ENV: ${self:provider.stage}
+      SENTRY_DSN: ${ssm:/hncomino-document-api/SENTRY_DSN}
+
+  w2-document-api-authorizer:
+    name: w2-document-api-authorizer-${self:provider.stage}
+    role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
+    handler: authorizer/index.handler
+    package:
+      exclude:
+        - '**'
+      include:
+        - authorizer/index.js
+        - authorizer/node_modules/**
+    environment:
+      jwtsecret: ${ssm:/common/hackney-jwt-secret}
+      allowedGroups: 'housingneeds-singleview-beta'
+      ENV: ${self:provider.stage}
+      SENTRY_DSN: ${ssm:/uhw-document-api/SENTRY_DSN}
+
+custom:
+  stage: ${self:provider.stage}
+  authorizer:
+    w2-document-api-authorizer:
+      name: w2-document-api-authorizer
+      type: request
+      resultTtlInSeconds: 0

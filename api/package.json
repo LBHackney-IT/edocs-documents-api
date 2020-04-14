@@ -4,9 +4,33 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api/index.js",
+    "test": "jest",
+    "test-coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@freiraum/msgreader": "github:bjpirt/msgreader",
+    "@iarna/rtf-to-html": "^1.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "handlebars": "^4.6.0",
+    "module-alias": "^2.2.2",
+    "node-cache": "^5.1.0",
+    "serverless-http": "^2.3.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@lib/(.*)$": "<rootDir>/lib/$1"
+    }
+  },
+  "_moduleAliases": {
+    "@lib": "lib"
+  }
 }
