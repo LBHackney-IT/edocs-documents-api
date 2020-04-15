@@ -3,7 +3,7 @@ module.exports = function(options) {
 
   return {
     get: async function(id) {
-      if (process.env.DISABLE_CACHE === 'true') return;
+      if (process.env.DISABLE_CACHE === "true") return;
       try {
         const response = await s3
           .getObject({
@@ -19,7 +19,7 @@ module.exports = function(options) {
           };
         }
       } catch (err) {
-        if (err.code !== 'NoSuchKey') console.log(err);
+        if (err.code !== "NoSuchKey") console.log(err);
       }
     },
     getUrl: async function(id, mimeType, extension) {
@@ -33,13 +33,13 @@ module.exports = function(options) {
           requestParams.ResponseContentDisposition = `attachment; filename ="${id}.${extension}"`;
         }
 
-        return await s3.getSignedUrl('getObject', requestParams);
+        return await s3.getSignedUrl("getObject", requestParams);
       } catch (err) {
-        if (err.code !== 'NoSuchKey') console.log(err);
+        if (err.code !== "NoSuchKey") console.log(err);
       }
     },
     put: async function(id, document) {
-      if (process.env.DISABLE_CACHE === 'true') return;
+      if (process.env.DISABLE_CACHE === "true") return;
       try {
         const response = await s3
           .putObject({

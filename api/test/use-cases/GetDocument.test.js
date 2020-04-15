@@ -1,15 +1,18 @@
-const GetAttachment = require('@lib/use-cases/GetDocument');
+const GetDocument = require('../../lib/use-cases/GetDocument');
 
-
-const createEdocsGateway = document => {
+const createEdocsGatewaySpy = (document, contentType) => {
     return {
       getDocument: jest.fn(() => {
-        return document;
+        return {
+          headers: {'content-type': contentType},
+          body: document
+        }
       })
     };
   };
 
-const createS3Gateway = document => {
+const createS3GatewaySpy = document => {
+  //TODO Spy on S3 put request
   return {
     put: jest.fn(() => {
       return 'http://dummy-url.com/?';
@@ -17,21 +20,18 @@ const createS3Gateway = document => {
   };
 }
 
-
-
-  it('gets the edocs document', async function() {
+describe('GetDocument', function() {
+  it.only('gets the right content', async function() {
     const documentId = 1234;
     const document = 'some document';
-    const stubEdocsGateway = createEdocsGateway(document);
-    const s3Gateway = createS3Gateway()
-    const usecase = GetDocument({ stubEdocsGateway, s3Gateway });
+    const edocsGatewaySpy = createEdocsGatewaySpy(document, 'text/xml');
+    const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: null });
+    const attachment = await usecase(documentId);
 
-    const attachment = await usecase(imageId);
-
-    expect(dbGateway.getEmailAttachmentMetadata).toHaveBeenCalledTimes(1);
-    expect(imageServerGateway.getDocument).toHaveBeenCalledTimes(1);
-
+    expect(edocsGatewaySpy.getDocument).toHaveBeenCalledTimes(1);
     expect(attachment.doc).toBe(document);
-    expect(attachment.filename).toBe('Scanned.pdf');
-    expect(attachment.mimeType).toBe('application/pdf');
+    expect(attachment.mimeType).toBe('xml')
+    expect(attachment.filename).toBe('1234.xml')
   });
+})
+ 
