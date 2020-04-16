@@ -25,6 +25,13 @@ functions:
     name: edocs-documents-api-${self:provider.stage}-getDoc
     role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
     handler: api/index.getDoc
+    package:
+      exclude:
+        - '**'
+      include:
+        - api/index.js
+        - api/lib/**
+        - node_modules/**
     events:
       - http:
           path: 'documents/{documentId}'
