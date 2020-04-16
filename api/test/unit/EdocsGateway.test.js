@@ -9,7 +9,7 @@ const gateway = require('../../lib/gateways/EdocsGateway')({
 describe('EdocsGateway', function() {
   it('makes the correct request and returns the response', async function() {
     const id = 123;
-    const dummyContent = fs.readFile('test/test-data/largeDocument');
+    const dummyContent = 'content';
     request.get.mockReturnValue(Promise.resolve(dummyContent));
 
     const response = await gateway.getDocument(id);
@@ -17,7 +17,8 @@ describe('EdocsGateway', function() {
     expect(request.get).toHaveBeenCalledTimes(1);
     expect(request.get).toHaveBeenCalledWith({
       url: `${edocsServerUrl}${id}`,
-      encoding: null
+      encoding: null,
+      resolveWithFullResponse: true
     });
     expect(response).toBe(dummyContent);
   });
