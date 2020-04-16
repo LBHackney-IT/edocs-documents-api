@@ -13,10 +13,11 @@
     "serverless-offline-ssm": "^4.1.2"
   },
   "scripts": {
-    "start": "AWS_PROFILE=hackney sls offline start -s dev --noAuth --noTimeout --port 3002",
+    "start": "AWS_PROFILE=hackney sls offline start -s dev --noAuth --noTimeout --port 3000",
     "debug": "export SLS_DEBUG=* && AWS_PROFILE=hackney node --inspect ./node_modules/serverless/bin/serverless offline -s dev --noAuth --noTimeout --port 3002",
     "lint": "eslint --fix --ext js api/lib && echo 'Lint complete.'",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "get-document": "serverless invoke local --function getDoc --stage testing"
   }
 }
