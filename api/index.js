@@ -8,16 +8,27 @@ const getDocument = require('./lib/use-cases/GetDocument')({
 });
 
 const getDoc = async (event) => {
-  const { mimeType, doc, filename } = await getDocument(event.pathParameters.documentId);
-  const response = {
-    statusCode: 200,
-    headers: {
-        "Content-Type": mimeType
-    },
-    body: doc.toString()
-};
+  
+  try {
+    const { mimeType, doc, filename } = await getDocument(event.pathParameters.documentId);
 
-  return response;
+    const response = {
+      statusCode: 200,
+      headers: {
+          "Content-Type": mimeType
+      },
+      body: doc.toString()
+    };
+    return response;
+  } catch (err) {
+    console.log(err);
+
+    const response = {
+      statusCode: 500,
+      body: err
+    };
+    return response;
+  }
 }
 
 module.exports = {
