@@ -17,7 +17,8 @@ const getDoc = async (event) => {
       headers: {
           "Content-Type": mimeType
       },
-      body: doc.toString()
+      body: doc.toString('base64'),
+      isBase64Encoded: true
     };
     return response;
   } catch (err) {
