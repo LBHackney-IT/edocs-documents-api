@@ -36,14 +36,24 @@ functions:
       - http:
           path: 'documents/{documentId}'
           method: GET
-          # authorizer: ${self:custom.authorizer.w2-document-api-authorizer}
+          authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
     environment:
       stage: ${self:provider.stage}
+  
+  edocs-documents-api-authorizer:
+    name: edocs-documents-api-authorizer-${self:provider.stage}
+    role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
+    handler: api/authorizer.handler
+    environment:
+      jwtsecret: ${ssm:/common/hackney-jwt-secret}
+      allowedGroups: '*'
+      # ENV: ${self:provider.stage}
+      # SENTRY_DSN: ${ssm:/uhw-document-api/SENTRY_DSN}
 
-# custom:
-#   stage: ${self:provider.stage}
-#   authorizer:
-#     w2-document-api-authorizer:
-#       name: w2-document-api-authorizer
-#       type: request
-#       resultTtlInSeconds: 0
+custom:
+  stage: ${self:provider.stage}
+  authorizer:
+    edocs-documents-api-authorizer:
+      name: edocs-documents-api-authorizer
+      type: request
+      resultTtlInSeconds: 0
