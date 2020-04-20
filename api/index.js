@@ -15,7 +15,8 @@ const getDoc = async (event) => {
     const response = {
       statusCode: 200,
       headers: {
-          "Content-Type": mimeType
+          'Content-Type': mimeType,
+          'Content-Disposition': `attachment; filename="${filename}"`
       },
       body: doc.toString('base64'),
       isBase64Encoded: true
