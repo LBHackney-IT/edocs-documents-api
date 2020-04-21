@@ -17,9 +17,10 @@ module.exports = function(options) {
       }
       
       await s3Gateway.put(documentId, doc)
-  
-      doc.url = await s3Gateway.getUrl(documentId, doc.mimeType, doc.mimeType)
+
     }
+  
+    doc.url = await s3Gateway.getUrl(documentId, doc.mimeType, doc.mimeType)
     
     return doc;
   };

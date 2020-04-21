@@ -30,7 +30,10 @@ const createS3GatewaySpy = document => {
         }
       };
     }),
-    getUrl: jest.fn(() => {
+    getUrl: jest.fn((id) => {
+      if (id === 1) {
+        return 'www.cachedDocumentUrl.com'
+        } 
       return 'http://dummy-url.com/?';
     })
   };

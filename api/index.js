@@ -14,16 +14,13 @@ const getDocument = require('./lib/use-cases/GetDocument')({
 const getDoc = async (event) => {
   
   try {
-    const { mimeType, doc, filename } = await getDocument(event.pathParameters.documentId);
-
+    const { _mimeType, _doc, _filename, url } = await getDocument(event.pathParameters.documentId);
     const response = {
-      statusCode: 200,
+      statusCode: 301,
       headers: {
-          'Content-Type': mimeType,
-          'Content-Disposition': `attachment; filename="${filename}"`
+          'Location': url
       },
-      body: doc.toString('base64'),
-      isBase64Encoded: true
+      body: ''
     };
     return response;
   } catch (err) {
