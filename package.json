@@ -2,6 +2,7 @@
   "name": "edocs-documents-api",
   "version": "1.0.0",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "request-promise": "^4.2.5",
     "serverless": "^1.66.0"
   },
