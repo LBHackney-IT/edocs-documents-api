@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const request = require("request-promise");
 
 module.exports = function(config) {
@@ -10,7 +12,7 @@ module.exports = function(config) {
         url: `${config.edocsServerUrl}${id}`,
         encoding: null,
         resolveWithFullResponse: true,
-        headers: { authorization: 'Bearer ' + process.env.DOTNET_API_KEY }
+        headers: { authorization: "Bearer " + config.apiKey }
       });
     }
   };

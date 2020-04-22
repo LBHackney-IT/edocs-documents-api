@@ -1,9 +1,11 @@
 jest.mock('request-promise');
+
 const request = require('request-promise');
 const edocsServerUrl = 'http://dummy-url.com/?';
+const apiKey = 'dummy api key'
 const fs = require('fs');
 const gateway = require('../../lib/gateways/EdocsGateway')({
-  edocsServerUrl
+  edocsServerUrl, apiKey
 });
 
 describe('EdocsGateway', function() {
@@ -18,7 +20,8 @@ describe('EdocsGateway', function() {
     expect(request.get).toHaveBeenCalledWith({
       url: `${edocsServerUrl}${id}`,
       encoding: null,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
+      headers: { authorization: 'Bearer ' + apiKey }
     });
     expect(response).toBe(dummyContent);
   });
