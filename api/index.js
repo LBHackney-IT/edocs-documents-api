@@ -16,6 +16,7 @@ const getDoc = async (event) => {
   
   try {
     const { _mimeType, _doc, _filename, url } = await getDocument(event.pathParameters.documentId);
+    if (!url) return { statusCode: 404, body: 'Requested document does not exist' }
     const response = {
       statusCode: 301,
       headers: {

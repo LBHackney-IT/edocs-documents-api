@@ -1,9 +1,10 @@
 const GetDocument = require('../../lib/use-cases/GetDocument');
 
-const createEdocsGatewaySpy = (document, contentType) => {
+const createEdocsGatewaySpy = (document, contentType, statusCode) => {
     return {
       getDocument: jest.fn(() => {
         return {
+          statusCode: statusCode || 200,
           headers: {'content-type': contentType},
           body: document
         }
@@ -41,6 +42,15 @@ const createS3GatewaySpy = document => {
 
 
 describe('GetDocument', function() {
+  it('gets the right content', async function() {
+    const edocsGatewaySpy = createEdocsGatewaySpy(null, null, 404);
+    const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: createS3GatewaySpy()});
+    const attachment = await usecase(0);
+
+    expect(edocsGatewaySpy.getDocument).toHaveBeenCalledTimes(1);
+    expect(attachment).toBe(null);
+  });
+
   it('gets the right content', async function() {
     const documentId = 1234;
     const document = 'some document';
