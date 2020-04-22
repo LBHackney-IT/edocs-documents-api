@@ -9,7 +9,8 @@ module.exports = function(config) {
       return await request.get({
         url: `${config.edocsServerUrl}${id}`,
         encoding: null,
-        resolveWithFullResponse: true
+        resolveWithFullResponse: true,
+        headers: { authorization: 'Bearer ' + process.env.DOTNET_API_KEY }
       });
     }
   };
