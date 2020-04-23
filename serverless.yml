@@ -47,8 +47,6 @@ functions:
     environment:
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
       allowedGroups: '*'
-      # ENV: ${self:provider.stage}
-      # SENTRY_DSN: ${ssm:/uhw-document-api/SENTRY_DSN}
 
 custom:
   stage: ${self:provider.stage}

@@ -1,11 +1,5 @@
-// const Sentry = require('@sentry/node');
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
-
-// Sentry.init({
-//   dsn: process.env.SENTRY_DSN,
-//   environment: process.env.ENV
-// });
 
 const jwt_secret = process.env.jwtsecret;
 const allowedGroups = process.env.allowedGroups.split(',');
@@ -75,7 +69,5 @@ exports.handler = async event => {
     }
   } catch (err) {
     console.log(err);
-    // Sentry.captureException(err);
-    // await Sentry.flush();
   }
 };
