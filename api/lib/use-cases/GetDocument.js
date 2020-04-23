@@ -18,17 +18,20 @@ module.exports = function(options) {
         return null;
       }
 
-      const mimeType = mimeTypes.extension(outputDoc.headers["content-type"]);
+      const mimeType = outputDoc.headers["content-type"]
+      const extension = mimeTypes.extension(mimeType)
+
       doc = {
         mimeType,
+        extension,
         doc: outputDoc.body,
-        filename: `${documentId}.${mimeType}`
+        filename: `${documentId}.${extension}`
       };
 
       await s3Gateway.put(documentId, doc);
     }
 
-    doc.url = await s3Gateway.getUrl(documentId, doc.mimeType, doc.mimeType);
+    doc.url = await s3Gateway.getUrl(documentId, doc.mimeType, doc.extension);
 
     return doc;
   };
