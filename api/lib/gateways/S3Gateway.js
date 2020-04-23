@@ -15,7 +15,8 @@ module.exports = function(options) {
           console.log(`Got doc id=${id} from s3`);
           return {
             doc: response.Body,
-            mimeType: response.Metadata.mimetype
+            mimeType: response.Metadata.mimetype,
+            extenstion: response.Metadata.extension
           };
         }
       } catch (err) {
@@ -30,7 +31,7 @@ module.exports = function(options) {
           ResponseContentType: mimeType
         };
         if (extension) {
-          requestParams.ResponseContentDisposition = `attachment; filename ="${id}.${extension}"`;
+          requestParams.ResponseContentDisposition = `inline; filename =${id}.${extension}`;
         }
 
         return await s3.getSignedUrl("getObject", requestParams);
@@ -46,7 +47,7 @@ module.exports = function(options) {
             Bucket: process.env.S3_BUCKET_NAME,
             Key: `${id}`,
             Body: document.doc,
-            Metadata: { mimetype: document.mimeType }
+            Metadata: { mimetype: document.mimeType, extension: document.extension }
           })
           .promise();
         if (response.data) {
