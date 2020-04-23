@@ -36,7 +36,7 @@ functions:
       - http:
           path: 'documents/{documentId}'
           method: GET
-          authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
+          # authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
     environment:
       stage: ${self:provider.stage}
   

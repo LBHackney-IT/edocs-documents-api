@@ -15,8 +15,12 @@ const getDocument = require('./lib/use-cases/GetDocument')({
 const getDoc = async (event) => {
   
   try {
-    const { _mimeType, _doc, _filename, url } = await getDocument(event.pathParameters.documentId);
-    if (!url) return { statusCode: 404, body: 'Requested document does not exist' }
+    const doc = await getDocument(event.pathParameters.documentId);
+
+    if (!doc) return { statusCode: 404, body: 'Requested document does not exist' }
+
+    const { _mimeType, _doc, _filename, url } = doc
+    
     const response = {
       statusCode: 301,
       headers: {
