@@ -9,6 +9,15 @@ module.exports = function(options) {
 
     if (!doc) {
       const outputDoc = await edocsGateway.getDocument(documentId);
+
+      console.log("statuscode: ", outputDoc.statusCode);
+      console.log(outputDoc);
+
+      if (outputDoc.statusCode != 200) {
+        console.log(`Error: couldn't find document with id: ${documentId}`);
+        return null;
+      }
+
       const mimeType = mimeTypes.extension(outputDoc.headers["content-type"]);
       doc = {
         mimeType,
