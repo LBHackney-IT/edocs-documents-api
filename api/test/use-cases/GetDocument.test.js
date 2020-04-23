@@ -18,7 +18,8 @@ const createS3GatewaySpy = document => {
       if (id === 1) {
         return {
           doc: 'cached document',
-          mimeType: 'xml',
+          mimeType: 'text/xml',
+          extension: 'xml',
           url: 'www.cachedDocumentUrl.com'
         }
       }
@@ -60,7 +61,8 @@ describe('GetDocument', function() {
 
     expect(edocsGatewaySpy.getDocument).toHaveBeenCalledTimes(1);
     expect(attachment.doc).toBe(document);
-    expect(attachment.mimeType).toBe('xml')
+    expect(attachment.mimeType).toBe('text/xml')
+    expect(attachment.extension).toBe('xml')
     expect(attachment.filename).toBe('1234.xml')
   });
 
