@@ -47,7 +47,10 @@ module.exports = function(options) {
             Bucket: process.env.S3_BUCKET_NAME,
             Key: `${id}`,
             Body: document.doc,
-            Metadata: { mimetype: document.mimeType, extension: document.extension }
+            Metadata: {
+              mimetype: document.mimeType,
+              extension: document.extension
+            }
           })
           .promise();
         if (response.data) {
