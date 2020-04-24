@@ -57,12 +57,14 @@ function userInAllowedGroup(userGroups) {
 
 exports.handler = async event => {
   try {
+    console.log('authoriser was called');
     const token =
       extractTokenFromAuthHeader(event) ||
       extractTokenFromCookieHeader(event) ||
       extractTokenFromUrl(event);
     const decodedToken = decodeToken(token);
     if (token && decodedToken && userInAllowedGroup(decodedToken.groups)) {
+      console.log('authoriser found a token');
       return allow(event.methodArn);
     } else {
       return 'Unauthorized';
