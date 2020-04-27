@@ -24,7 +24,9 @@ const getDoc = async (event) => {
     const response = {
       statusCode: 301,
       headers: {
-          'Location': url
+          'Location': url,
+          'Cache-Control': 'no-store, no-cache',
+          'Pragma': 'no-cache'
       },
       body: ''
     };
