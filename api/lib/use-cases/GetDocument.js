@@ -3,9 +3,9 @@ const fs = require("fs");
 
 //TODO: get better name for this func
 function saveFileLocally(docBody, fileName) {
-  fs.writeFile(`${process.env.TEMP_FILE_PATH}${fileName}`, docBody);
+  fs.writeFileSync(`/tmp/${fileName}`, docBody);
   console.log("The file has been saved!");
-  return `${process.env.TEMP_FILE_PATH}${fileName}`;
+  return fileName;
 }
 
 const convertDocument = require("./ConvertDocument");
@@ -26,27 +26,26 @@ module.exports = function(options) {
         const mimeType = outputDoc.headers["content-type"];
         const extension = mimeTypes.extension(mimeType);
 
-        filePath = saveFileLocally(
-          outputDoc.body,
-          `${documentId}.${extension}`
-        );
+        var hopefullyPDF = outputDoc.body
 
-        wherePDFis = convertDocument(
-          filePath,
-          process.env.TEMP_FILE_PATH
-        );
+        if (extension === 'doc') {
+          extension = 'pdf'
+          fileName = saveFileLocally(
+            outputDoc.body,
+            `${documentId}.${extension}`
+          );
 
-        console.log('hello', wherePDFis)
+          wherePDFis = await convertDocument(fileName);
 
-        hopefullyPDF = fs.readFile(
-          `${process.env.TEMP_FILE_PATH}${documentId}.pdf`
-        );
-
+          hopefullyPDF = fs.readFile(
+            `/tmp/${documentId}.${extension}`
+          );
+        }
         doc = {
           mimeType,
           extension,
           doc: hopefullyPDF,
-          filename: `${documentId}.pdf`
+          filename: `${documentId}.${extension}`
         };
 
         await s3Gateway.put(documentId, doc);

@@ -39,6 +39,9 @@ functions:
           authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
     environment:
       stage: ${self:provider.stage}
+    layers:
+      - arn:aws:lambda:eu-west-2:764866452798:layer:libreoffice-brotli:1
+
   
   edocs-documents-api-authorizer:
     name: edocs-documents-api-authorizer-${self:provider.stage}
