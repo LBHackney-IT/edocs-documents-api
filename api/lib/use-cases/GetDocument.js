@@ -31,10 +31,12 @@ module.exports = function(options) {
           `${documentId}.${extension}`
         );
 
-        wherePDFis = await convertDocument(
+        wherePDFis = convertDocument(
           filePath,
           process.env.TEMP_FILE_PATH
         );
+
+        console.log('hello', wherePDFis)
 
         hopefullyPDF = fs.readFile(
           `${process.env.TEMP_FILE_PATH}${documentId}.pdf`
