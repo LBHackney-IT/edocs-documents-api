@@ -1,11 +1,11 @@
 require('dotenv').config();
-const AWS = require('aws-sdk');
+const S3 = require('aws-sdk/clients/s3');
 const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
   apiKey: process.env.EDOCS_API_KEY
 });
 const s3Gateway = require('./lib/gateways/S3Gateway')({
-  s3: new AWS.S3()
+  s3: new S3()
 });
 
 const getDocument = require('./lib/use-cases/GetDocument')({
