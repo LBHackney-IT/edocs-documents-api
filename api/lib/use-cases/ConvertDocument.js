@@ -1,7 +1,7 @@
 module.exports = async function(fileName) {
     var soffice = '/usr/local/bin/soffice'
 
-    if (process.env.ENV === 'staging' || process.env.ENV === 'production') {
+    if (process.env.stage === 'staging' || process.env.stage === 'production') {
       const {unpack, defaultArgs} = require('@shelf/aws-lambda-libreoffice');
       await unpack(); // default path /tmp/instdir/program/soffice.bin
       soffice = '/tmp/instdir/program/soffice.bin'
