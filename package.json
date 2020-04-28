@@ -4,8 +4,7 @@
   "dependencies": {
     "cookie": "^0.4.1",
     "jsonwebtoken": "^8.5.1",
-    "request-promise": "^4.2.5",
-    "serverless": "^1.66.0"
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
     "aws-sdk": "^2.664.0",
@@ -14,6 +13,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
+    "serverless": "^1.66.0",
     "serverless-offline": "^5.12.1",
     "serverless-offline-ssm": "^4.1.2"
   },
