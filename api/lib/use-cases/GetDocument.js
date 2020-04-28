@@ -1,4 +1,14 @@
 const mimeTypes = require("mime-types");
+const fs = require("fs");
+
+//TODO: get better name for this func
+function saveFileLocally(docBody, fileName) {
+  fs.writeFileSync(`/tmp/${fileName}`, docBody);
+  console.log("The file has been saved!");
+  return fileName;
+}
+
+const convertDocument = require("./ConvertDocument");
 
 module.exports = function(options) {
   const edocsGateway = options.edocsGateway;
@@ -16,10 +26,26 @@ module.exports = function(options) {
         const mimeType = outputDoc.headers["content-type"];
         const extension = mimeTypes.extension(mimeType);
 
+        var document = outputDoc.body
+
+        if (extension === 'doc'|| extension === 'docx') {
+          extension = 'pdf'
+
+          fileName = saveFileLocally(
+            outputDoc.body,
+            `${documentId}.${extension}`
+          );
+
+          await convertDocument(fileName);
+
+          document = fs.readFile(
+            `/tmp/${documentId}.${extension}`
+          );
+        }
         doc = {
           mimeType,
           extension,
-          doc: outputDoc.body,
+          doc: document,
           filename: `${documentId}.${extension}`
         };
 
