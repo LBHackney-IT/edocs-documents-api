@@ -4,7 +4,8 @@
   "dependencies": {
     "cookie": "^0.4.1",
     "jsonwebtoken": "^8.5.1",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "aws-sdk": "^2.664.0",
