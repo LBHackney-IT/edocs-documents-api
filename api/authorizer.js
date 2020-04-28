@@ -49,7 +49,6 @@ function decodeToken(token) {
 
 function userInAllowedGroup(userGroups) {
   if (!(userGroups && userGroups.length !== undefined)) return false;
-  if (allowedGroups.indexOf("*") >= 0) return true;
   for (const group of userGroups) {
     if (allowedGroups.indexOf(group) >= 0) return true;
   }

@@ -46,7 +46,7 @@ functions:
     handler: api/authorizer.handler
     environment:
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
-      allowedGroups: '*'
+      allowedGroups: ${self:provider.stage}-edocs-web-access
 
 custom:
   stage: ${self:provider.stage}
