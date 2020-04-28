@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "dependencies": {
     "cookie": "^0.4.1",
+    "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
-    "request-promise": "^4.2.5",
-    "dotenv": "^8.2.0"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   },
   "devDependencies": {
     "aws-sdk": "^2.664.0",
