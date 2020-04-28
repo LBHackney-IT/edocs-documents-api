@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "@shelf/aws-lambda-libreoffice": "^3.0.6",
-    "cookie": "^0.4.1",
     "dotenv": "^8.2.0",
-    "jsonwebtoken": "^8.5.1",
     "request": "^2.88.2",
+    "node-lambda-authorizer": "LBHackney-IT/node-lambda-authorizer.git#master",
     "request-promise": "^4.2.5"
   },
   "devDependencies": {
