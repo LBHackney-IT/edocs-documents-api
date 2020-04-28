@@ -24,7 +24,7 @@ module.exports = function(options) {
         if (outputDoc.statusCode != 200) return null;
 
         const mimeType = outputDoc.headers["content-type"];
-        const extension = mimeTypes.extension(mimeType);
+        var extension = mimeTypes.extension(mimeType);
 
         var document = outputDoc.body
 
