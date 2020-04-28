@@ -3,7 +3,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/node:12.13
+      - image: circleci/node:12.16
 
     working_directory: ~/repo
 
@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo npm install --prefix=$HOME/.local
+            sudo npm install
 
       - save_cache:
           paths:
