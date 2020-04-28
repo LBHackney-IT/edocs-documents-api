@@ -26,25 +26,26 @@ module.exports = function(options) {
         const mimeType = outputDoc.headers["content-type"];
         const extension = mimeTypes.extension(mimeType);
 
-        var hopefullyPDF = outputDoc.body
+        var document = outputDoc.body
 
-        if (extension === 'doc') {
+        if (extension === 'doc'|| extension === 'docx') {
           extension = 'pdf'
+
           fileName = saveFileLocally(
             outputDoc.body,
             `${documentId}.${extension}`
           );
 
-          wherePDFis = await convertDocument(fileName);
+          await convertDocument(fileName);
 
-          hopefullyPDF = fs.readFile(
+          document = fs.readFile(
             `/tmp/${documentId}.${extension}`
           );
         }
         doc = {
           mimeType,
           extension,
-          doc: hopefullyPDF,
+          doc: document,
           filename: `${documentId}.${extension}`
         };
 
