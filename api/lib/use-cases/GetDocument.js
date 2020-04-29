@@ -60,19 +60,19 @@ module.exports = function(options) {
           );
 
           try {
-            await convertDocument(fileName, sofficePromise);
+            fileName = await convertDocument(fileName, sofficePromise);
             console.log('File converted successfully')
           } catch (err) {
             console.log(err)
             console.log('File not converted')
             throw(err)
           }
-          
-          extension = 'pdf'
+          console.log(typeof fileName)
+          extension = fileName.split('.').pop()
 
           try {
           document = fs.readFileSync(
-            `/tmp/${documentId}.${extension}`
+            `/tmp/${fileName}`
           );
 
           mimeType = 'application/pdf'

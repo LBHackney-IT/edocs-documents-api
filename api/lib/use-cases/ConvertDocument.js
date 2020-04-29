@@ -1,6 +1,6 @@
-module.exports = function(fileName, sofficePromise) {
+module.exports = async function(fileName, sofficePromise) {
     var execSync = require("child_process").execSync;
-    sofficePromise.then((path) => {
+    var promise = sofficePromise.then((path) => {
       const cmd = `${path} --convert-to pdf /tmp/${fileName} --outdir /tmp`
     var logs
     
@@ -12,7 +12,8 @@ module.exports = function(fileName, sofficePromise) {
     }
 
     console.log(logs.toString('utf8'))
+    
     }
-  )
+  ).then(() => {return fileName.replace(/\.[^/.]+$/, "") + ".pdf"});
+  return promise
 };
-
