@@ -14,6 +14,8 @@ function saveFileLocally(docBody, fileName) {
   return fileName;
 }
 
+var soffice = '/usr/local/bin/soffice'
+
 async function unpackLibreOffice() {
   console.log('Starting to unpack libreoffice')
   const INPUT_PATH = '/opt/lo.tar.br';
@@ -21,13 +23,11 @@ async function unpackLibreOffice() {
   await unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
   console.log('libreoffice unpacked')
 
-  return '/tmp/instdir/program/soffice.bin'
+  soffice = '/tmp/instdir/program/soffice.bin'
 }
 
-var soffice = '/usr/local/bin/soffice'
-
 if (process.env.stage === 'staging' || process.env.stage === 'production') {
-  soffice = unpackLibreOffice()
+  unpackLibreOffice()
 }
 
 const convertDocument = require("./ConvertDocument");
