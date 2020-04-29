@@ -16,7 +16,8 @@ try {
   console.log('s3 not created')
   throw(err)
 }
-const convertDocument = require("./lib/use-cases/ConvertDocument");
+
+const convertDocument = require("./lib/use-cases/ConvertDocument")();
 
 const getDocument = require('./lib/use-cases/GetDocument')({
   edocsGateway: edocsGateway, s3Gateway: s3Gateway, converter: convertDocument

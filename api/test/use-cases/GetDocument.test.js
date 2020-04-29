@@ -1,5 +1,6 @@
 const GetDocument = require('../../lib/use-cases/GetDocument');
 const fs = require("fs");
+//const mock = require('mock-fs');
 
 const createEdocsGatewaySpy = (document, contentType, statusCode) => {
     return {
@@ -43,11 +44,13 @@ const createS3GatewaySpy = document => {
 }
 
 const createConverterSpy = (fileName, sofficePromise) => {
-  const convertedFileName = fileName.replace(/\.[^/.]+$/, "") + ".pdf"
-  fs.renameSync(`/tmp/${fileName}`,   `/tmp/${convertedFileName}`)
-  return jest.fn(() => {
-    return convertedFileName
+  return {
+    execute: jest.fn((fileName, sofficePromise) => {
+      const convertedFileName = fileName.replace(/\.[^/.]+$/, "") + ".pdf"
+      fs.renameSync(`/tmp/${fileName}`,   `/tmp/${convertedFileName}`)
+      return convertedFileName
   })
+  }
 };
 
 describe('GetDocument', function() {
@@ -109,16 +112,15 @@ describe('GetDocument', function() {
     const cachedDocument = 'cached document';
     const edocsGatewaySpy = createEdocsGatewaySpy(cachedDocument, 'application/msword');
     const s3GatewaySpy = createS3GatewaySpy()
-    const converterSpy = createConverterSpy('2.doc')
-
+    const converterSpy = createConverterSpy()
     const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: s3GatewaySpy, converter: converterSpy });
   
     const attachment = await usecase(cachedDocumentId, null);
     
     expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
     expect(s3GatewaySpy.get).toHaveBeenCalledWith(cachedDocumentId);
-    expect(converterSpy).toHaveBeenCalledTimes(1)
-    expect(converterSpy).toHaveBeenCalledWith('2.doc', null)
+    expect(converterSpy.execute).toHaveBeenCalledTimes(1)
+    expect(converterSpy.execute).toHaveBeenCalledWith('2.doc', null)
     expect(attachment.doc.toString()).toBe(cachedDocument);
     expect(attachment.url).toBe('http://dummy-url.com/?')
     expect(attachment.extension).toBe('pdf')
