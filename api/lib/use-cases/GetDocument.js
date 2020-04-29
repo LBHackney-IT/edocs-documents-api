@@ -3,8 +3,15 @@ const fs = require("fs");
 
 //TODO: get better name for this func
 function saveFileLocally(docBody, fileName) {
-  fs.writeFileSync(`/tmp/${fileName}`, docBody);
-  console.log("The file has been saved!");
+  try {
+    fs.writeFileSync(`/tmp/${fileName}`, docBody);
+    console.log("The file has been saved!");
+  } catch (err) {
+    console.log(err)
+    console.log('File not saved')
+    throw(err)
+  }
+  
   return fileName;
 }
 
@@ -20,29 +27,44 @@ module.exports = function(options) {
     if (!doc) {
       try {
         const outputDoc = await edocsGateway.getDocument(documentId);
-
+        
         if (outputDoc.statusCode != 200) return null;
 
         var mimeType = outputDoc.headers["content-type"];
         var extension = mimeTypes.extension(mimeType);
 
+        console.log('got from edocs:', documentId, '.', extension)
+
         var document = outputDoc.body
 
         if (extension === 'doc'|| extension === 'docx') {
           extension = 'pdf'
-
+          
           fileName = saveFileLocally(
-            outputDoc.body,
+            document,
             `${documentId}.${extension}`
           );
 
-          await convertDocument(fileName);
-
+          try {
+            await convertDocument(fileName);
+            console.log('File converted successfully')
+          } catch (err) {
+            console.log(err)
+            console.log('File not converted')
+            throw(err)
+          }
+          
+          try {
           document = fs.readFile(
             `/tmp/${documentId}.${extension}`
           );
 
           mimeType = 'application/pdf'
+          } catch (err) {
+            console.log(err)
+            console.log('File not read')
+            throw(err)
+          }
         }
         doc = {
           mimeType,
