@@ -23,11 +23,11 @@ async function unpackLibreOffice() {
   await unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
   console.log('libreoffice unpacked')
 
-  soffice = '/tmp/instdir/program/soffice.bin'
+  return '/tmp/instdir/program/soffice.bin'
 }
 
 if (process.env.stage === 'staging' || process.env.stage === 'production') {
-  unpackLibreOffice()
+  unpackLibreOffice().then(res => soffice = res)
 }
 
 const convertDocument = require("./ConvertDocument");
