@@ -4,8 +4,11 @@ const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
   apiKey: process.env.EDOCS_API_KEY
 });
+
+var s3Gateway
+
 try {
-  const s3Gateway = require('./lib/gateways/S3Gateway')({
+   s3Gateway= require('./lib/gateways/S3Gateway')({
     s3: new aws.S3()
    });
 } catch (err) {
