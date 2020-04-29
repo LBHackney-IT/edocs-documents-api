@@ -17,7 +17,7 @@ module.exports = async function(fileName) {
     console.log(tmpContents)
 
     const cmd = `${soffice} --convert-to pdf /tmp/${fileName} --outdir /tmp`
-    
+    console.log(cmd)
     var logs
 
     try {
