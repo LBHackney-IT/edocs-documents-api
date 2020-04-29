@@ -11,8 +11,23 @@ function saveFileLocally(docBody, fileName) {
     console.log('File not saved')
     throw(err)
   }
-  
   return fileName;
+}
+
+async function unpackLibreOffice() {
+  console.log('Starting to unpack libreoffice')
+  const INPUT_PATH = '/opt/lo.tar.br';
+  const {unpack, defaultArgs} = require('@shelf/aws-lambda-libreoffice');
+  await unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
+  console.log('libreoffice unpacked')
+
+  return '/tmp/instdir/program/soffice.bin'
+}
+
+var soffice = '/usr/local/bin/soffice'
+
+if (process.env.stage === 'staging' || process.env.stage === 'production') {
+  soffice = unpackLibreOffice()
 }
 
 const convertDocument = require("./ConvertDocument");
@@ -33,7 +48,7 @@ module.exports = function(options) {
         var mimeType = outputDoc.headers["content-type"];
         var extension = mimeTypes.extension(mimeType);
 
-        console.log('got from edocs:', documentId, '.', extension)
+        console.log('From edocs retrieved:', `${documentId}.${extension}`)
 
         var document = outputDoc.body
 
@@ -45,7 +60,7 @@ module.exports = function(options) {
           );
 
           try {
-            await convertDocument(fileName);
+            await convertDocument(fileName, soffice);
             console.log('File converted successfully')
           } catch (err) {
             console.log(err)
