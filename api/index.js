@@ -1,12 +1,19 @@
 require('dotenv').config();
-const S3 = require('aws-sdk/clients/s3');
+const aws = require('aws-sdk');
 const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
   apiKey: process.env.EDOCS_API_KEY
 });
-const s3Gateway = require('./lib/gateways/S3Gateway')({
-  s3: new S3()
-});
+try {
+  const s3Gateway = require('./lib/gateways/S3Gateway')({
+    s3: new aws.S3()
+   });
+} catch (err) {
+  console.log(err)
+  console.log('s3 not created')
+  throw(err)
+}
+
 
 const getDocument = require('./lib/use-cases/GetDocument')({
   edocsGateway: edocsGateway, s3Gateway: s3Gateway
