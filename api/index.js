@@ -16,17 +16,13 @@ try {
   console.log('s3 not created')
   throw(err)
 }
+const convertDocument = require("./lib/use-cases/ConvertDocument");
 
 const getDocument = require('./lib/use-cases/GetDocument')({
-  edocsGateway: edocsGateway, s3Gateway: s3Gateway
+  edocsGateway: edocsGateway, s3Gateway: s3Gateway, converter: convertDocument
 });
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function localLibreOffice() {
-  await sleep(10000)
   return '/usr/local/bin/soffice'
 }
 
@@ -42,7 +38,6 @@ async function unpackLibreOffice() {
 
 const isDev = !(process.env.stage === "staging" || process.env.stage === "production")
 
-// Set soffice to be the real promise or our fake one.
 const sofficePromise = isDev ? localLibreOffice() : unpackLibreOffice();
 
 const getDoc = async (event) => {

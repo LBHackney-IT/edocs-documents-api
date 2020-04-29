@@ -30,11 +30,12 @@ function saveFileLocally(docBody, fileName) {
 //   soffice = unpackLibreOffice()
 // }
 
-const convertDocument = require("./ConvertDocument");
+// 
 
 module.exports = function(options) {
   const edocsGateway = options.edocsGateway;
   const s3Gateway = options.s3Gateway;
+  const convertDocument = options.converter;
 
   return async function(documentId, sofficePromise) {
     let doc = await s3Gateway.get(documentId);
@@ -67,7 +68,7 @@ module.exports = function(options) {
             console.log('File not converted')
             throw(err)
           }
-          console.log(typeof fileName)
+          
           extension = fileName.split('.').pop()
 
           try {
