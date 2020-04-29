@@ -13,9 +13,19 @@ module.exports = async function(fileName) {
     var tmpContents = execSync(
       'cd /tmp && ls'
     ).toString()
+
     console.log(tmpContents)
-    execSync(
-      `${soffice} --headless --convert-to pdf /tmp/${fileName} --outdir /tmp`
-    );
+
+    const cmd = `${soffice} --headless --convert-to pdf /tmp/${fileName} --outdir /tmp`
+    
+    var logs
+
+    try {
+      logs = execSync(cmd);
+    } catch (e) {
+      logs = execSync(cmd);
+    }
+
+    console.log(logs.toString('utf8'))
 };
 
