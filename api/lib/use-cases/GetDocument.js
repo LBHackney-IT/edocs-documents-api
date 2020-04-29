@@ -55,12 +55,13 @@ module.exports = function(options) {
           }
           
           try {
-          document = fs.readFile(
+          document = fs.readFileSync(
             `/tmp/${documentId}.${extension}`
           );
 
           mimeType = 'application/pdf'
-          } catch (err) {
+          
+        } catch (err) {
             console.log(err)
             console.log('File not read')
             throw(err)
