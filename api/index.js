@@ -38,7 +38,7 @@ async function unpackLibreOffice() {
 const isDev = !(process.env.stage === "staging" || process.env.stage === "production")
 
 // Set soffice to be the real promise or our fake one.
-const sofficePromise = isDev ? stubbedLibreOffice() : unpackLibreOffice();
+const sofficePromise = isDev ? localLibreOffice() : unpackLibreOffice();
 
 const getDoc = async (event) => {
   
