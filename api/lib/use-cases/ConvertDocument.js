@@ -11,7 +11,7 @@ module.exports = async function(fileName) {
 
     var execSync = require("child_process").execSync;
     execSync(
-      'cd /tmp && ll'
+      'cd /tmp && ls'
     )
     execSync(
       `${soffice} --headless --convert-to pdf /tmp/${fileName} --outdir /tmp`
