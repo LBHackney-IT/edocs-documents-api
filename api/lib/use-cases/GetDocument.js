@@ -38,7 +38,6 @@ module.exports = function(options) {
         var document = outputDoc.body
 
         if (extension === 'doc'|| extension === 'docx') {
-          extension = 'pdf'
           
           fileName = saveFileLocally(
             document,
@@ -54,6 +53,8 @@ module.exports = function(options) {
             throw(err)
           }
           
+          extension = 'pdf'
+
           try {
           document = fs.readFileSync(
             `/tmp/${documentId}.${extension}`
