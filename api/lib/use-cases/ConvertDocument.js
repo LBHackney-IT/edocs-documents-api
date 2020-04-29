@@ -3,7 +3,8 @@ module.exports = function(fileName, sofficePromise) {
     sofficePromise.then((path) => {
       const cmd = `${path} --convert-to pdf /tmp/${fileName} --outdir /tmp`
     var logs
-
+    
+    console.log(cmd)
     try {
       logs = execSync(cmd);
     } catch (e) {

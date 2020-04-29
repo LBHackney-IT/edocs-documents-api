@@ -21,7 +21,12 @@ const getDocument = require('./lib/use-cases/GetDocument')({
   edocsGateway: edocsGateway, s3Gateway: s3Gateway
 });
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function localLibreOffice() {
+  await sleep(10000)
   return '/usr/local/bin/soffice'
 }
 
