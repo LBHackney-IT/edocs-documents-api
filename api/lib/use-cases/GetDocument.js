@@ -23,7 +23,7 @@ module.exports = function(options) {
 
         if (outputDoc.statusCode != 200) return null;
 
-        const mimeType = outputDoc.headers["content-type"];
+        var mimeType = outputDoc.headers["content-type"];
         var extension = mimeTypes.extension(mimeType);
 
         var document = outputDoc.body
@@ -41,6 +41,8 @@ module.exports = function(options) {
           document = fs.readFile(
             `/tmp/${documentId}.${extension}`
           );
+
+          mimeType = 'application/pdf'
         }
         doc = {
           mimeType,
