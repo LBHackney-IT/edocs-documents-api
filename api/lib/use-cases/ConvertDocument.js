@@ -1,6 +1,7 @@
-module.exports = function(fileName, soffice) {
+module.exports = function(fileName, sofficePromise) {
     var execSync = require("child_process").execSync;
-    const cmd = `${soffice} --convert-to pdf /tmp/${fileName} --outdir /tmp`
+    sofficePromise.then((path) => {
+      const cmd = `${path} --convert-to pdf /tmp/${fileName} --outdir /tmp`
     var logs
 
     try {
@@ -10,5 +11,7 @@ module.exports = function(fileName, soffice) {
     }
 
     console.log(logs.toString('utf8'))
+    }
+  )
 };
 

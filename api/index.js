@@ -17,15 +17,33 @@ try {
   throw(err)
 }
 
-
 const getDocument = require('./lib/use-cases/GetDocument')({
   edocsGateway: edocsGateway, s3Gateway: s3Gateway
 });
 
+async function localLibreOffice() {
+  return '/usr/local/bin/soffice'
+}
+
+async function unpackLibreOffice() {
+  console.log('Starting to unpack libreoffice')
+  const INPUT_PATH = '/opt/lo.tar.br';
+  const {unpack, defaultArgs} = require('@shelf/aws-lambda-libreoffice');
+  await unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
+  console.log('libreoffice unpacked')
+
+  return '/tmp/instdir/program/soffice.bin'
+}
+
+const isDev = !(process.env.stage === "staging" || process.env.stage === "production")
+
+// Set soffice to be the real promise or our fake one.
+const sofficePromise = isDev ? stubbedLibreOffice() : unpackLibreOffice();
+
 const getDoc = async (event) => {
   
   try {
-    const doc = await getDocument(event.pathParameters.documentId);
+    const doc = await getDocument(event.pathParameters.documentId, sofficePromise);
 
     if (!doc) return { statusCode: 404, body: 'Requested document does not exist' }
 

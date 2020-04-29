@@ -14,21 +14,21 @@ function saveFileLocally(docBody, fileName) {
   return fileName;
 }
 
-var soffice = '/usr/local/bin/soffice'
+// var soffice = '/usr/local/bin/soffice'
 
-function unpackLibreOffice() {
-  console.log('Starting to unpack libreoffice')
-  const INPUT_PATH = '/opt/lo.tar.br';
-  const {unpack, defaultArgs} = require('@shelf/aws-lambda-libreoffice');
-  unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
-  console.log('libreoffice unpacked')
+// function unpackLibreOffice() {
+//   console.log('Starting to unpack libreoffice')
+//   const INPUT_PATH = '/opt/lo.tar.br';
+//   const {unpack, defaultArgs} = require('@shelf/aws-lambda-libreoffice');
+//   unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
+//   console.log('libreoffice unpacked')
 
-  return '/tmp/instdir/program/soffice.bin'
-}
+//   return '/tmp/instdir/program/soffice.bin'
+// }
 
-if (process.env.stage === 'staging' || process.env.stage === 'production') {
-  soffice = unpackLibreOffice()
-}
+// if (process.env.stage === 'staging' || process.env.stage === 'production') {
+//   soffice = unpackLibreOffice()
+// }
 
 const convertDocument = require("./ConvertDocument");
 
@@ -36,7 +36,7 @@ module.exports = function(options) {
   const edocsGateway = options.edocsGateway;
   const s3Gateway = options.s3Gateway;
 
-  return async function(documentId) {
+  return async function(documentId, sofficePromise) {
     let doc = await s3Gateway.get(documentId);
 
     if (!doc) {
@@ -60,7 +60,7 @@ module.exports = function(options) {
           );
 
           try {
-            await convertDocument(fileName, soffice);
+            await convertDocument(fileName, sofficePromise);
             console.log('File converted successfully')
           } catch (err) {
             console.log(err)
