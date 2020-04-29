@@ -16,18 +16,18 @@ function saveFileLocally(docBody, fileName) {
 
 var soffice = '/usr/local/bin/soffice'
 
-async function unpackLibreOffice() {
+function unpackLibreOffice() {
   console.log('Starting to unpack libreoffice')
   const INPUT_PATH = '/opt/lo.tar.br';
   const {unpack, defaultArgs} = require('@shelf/aws-lambda-libreoffice');
-  await unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
+  unpack({inputPath: INPUT_PATH}); // default path /tmp/instdir/program/soffice.bin
   console.log('libreoffice unpacked')
 
   return '/tmp/instdir/program/soffice.bin'
 }
 
 if (process.env.stage === 'staging' || process.env.stage === 'production') {
-  unpackLibreOffice().then(res => soffice = res)
+  soffice = unpackLibreOffice()
 }
 
 const convertDocument = require("./ConvertDocument");
