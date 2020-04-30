@@ -63,6 +63,7 @@ resources:
             Type: AWS::S3::Bucket
             Properties:
                 BucketName: edocs-documents-${self:provider.stage}
+                AccessControl: Private
 
 custom:
   stage: ${self:provider.stage}
