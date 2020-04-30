@@ -44,10 +44,6 @@ functions:
       EDOCS_API_KEY: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-key~true}
       EDOCS_API_URL: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-url}
       S3_BUCKET_NAME: edocs-documents-${self:provider.stage}
-
-    #layers:
-    #  - arn:aws:lambda:eu-west-2:764866452798:layer:libreoffice-brotli:1
-
   
   edocs-documents-api-authorizer:
     name: edocs-documents-api-authorizer-${self:provider.stage}

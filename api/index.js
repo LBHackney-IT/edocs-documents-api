@@ -42,7 +42,6 @@ const isDev = !(process.env.stage === "staging" || process.env.stage === "produc
 const sofficePromise = isDev ? localLibreOffice() : unpackLibreOffice();
 
 const getDoc = async (event) => {
-  console.log('IP:', event.requestContext.identity.sourceIp)
   try {
     const doc = await getDocument(event.pathParameters.documentId, sofficePromise);
 
