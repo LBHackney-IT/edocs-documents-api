@@ -73,3 +73,4 @@ custom:
       name: edocs-documents-api-authorizer
       type: request
       resultTtlInSeconds: 0
+      identitySource: ''
