@@ -25,7 +25,7 @@ functions:
     name: edocs-documents-api-${self:provider.stage}-getDoc
     role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
     handler: api/index.getDoc
-    memorySize: 1024
+    memorySize: 3008
     package:
       exclude:
         - '**'
