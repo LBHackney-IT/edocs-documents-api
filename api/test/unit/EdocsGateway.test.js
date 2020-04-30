@@ -3,7 +3,6 @@ jest.mock('request-promise');
 const request = require('request-promise');
 const edocsServerUrl = 'http://dummy-url.com/?';
 const apiKey = 'dummy api key'
-const fs = require('fs');
 const gateway = require('../../lib/gateways/EdocsGateway')({
   edocsServerUrl, apiKey
 });

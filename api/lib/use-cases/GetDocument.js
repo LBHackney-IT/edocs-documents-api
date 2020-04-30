@@ -1,15 +1,14 @@
 const mimeTypes = require("mime-types");
 const fs = require("fs");
 
-//TODO: get better name for this func
 function saveFileLocally(docBody, fileName) {
   try {
     fs.writeFileSync(`/tmp/${fileName}`, docBody);
     console.log("The file has been saved!");
   } catch (err) {
-    console.log(err)
-    console.log('File not saved')
-    throw(err)
+    console.log(err);
+    console.log("File not saved");
+    throw err;
   }
   return fileName;
 }
@@ -25,45 +24,41 @@ module.exports = function(options) {
     if (!doc) {
       try {
         const outputDoc = await edocsGateway.getDocument(documentId);
-        
+
         if (outputDoc.statusCode != 200) return null;
 
         var mimeType = outputDoc.headers["content-type"];
         var extension = mimeTypes.extension(mimeType);
 
-        console.log('From edocs retrieved:', `${documentId}.${extension}`)
+        console.log("From edocs retrieved:", `${documentId}.${extension}`);
 
-        var document = outputDoc.body
+        var document = outputDoc.body;
 
-        if (extension === 'doc'|| extension === 'docx') {
-          
-          fileName = saveFileLocally(
+        if (extension === "doc" || extension === "docx") {
+          var fileName = saveFileLocally(
             document,
             `${documentId}.${extension}`
           );
 
           try {
             fileName = await convertDocument.execute(fileName, sofficePromise);
-            console.log('File converted successfully')
+            console.log("File converted successfully");
           } catch (err) {
-            console.log(err)
-            console.log('File not converted')
-            throw(err)
+            console.log(err);
+            console.log("File not converted");
+            throw err;
           }
 
-          extension = fileName.split('.').pop()
+          extension = fileName.split(".").pop();
 
           try {
-          document = fs.readFileSync(
-            `/tmp/${fileName}`
-          );
+            document = fs.readFileSync(`/tmp/${fileName}`);
 
-          mimeType = 'application/pdf'
-          
-        } catch (err) {
-            console.log(err)
-            console.log('File not read')
-            throw(err)
+            mimeType = "application/pdf";
+          } catch (err) {
+            console.log(err);
+            console.log("File not read");
+            throw err;
           }
         }
         doc = {
