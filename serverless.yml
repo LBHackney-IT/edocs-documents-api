@@ -41,6 +41,10 @@ functions:
           authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
     environment:
       stage: ${self:provider.stage}
+      EDOCS_API_KEY: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-key~true}
+      EDOCS_API_URL: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-url}
+      S3_BUCKET_NAME: ${ssm:/edocs-api/${self:provider.stage}/s3-bucket-name}
+
     #layers:
     #  - arn:aws:lambda:eu-west-2:764866452798:layer:libreoffice-brotli:1
 
