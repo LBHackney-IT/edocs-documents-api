@@ -1,6 +1,5 @@
 const GetDocument = require('../../lib/use-cases/GetDocument');
 const fs = require("fs");
-//const mock = require('mock-fs');
 
 const createEdocsGatewaySpy = (document, contentType, statusCode) => {
     return {
@@ -54,7 +53,7 @@ const createConverterSpy = (fileName, sofficePromise) => {
 };
 
 describe('GetDocument', function() {
-  it('gets the right content', async function() {
+  it('return null if document does not exist', async function() {
     const edocsGatewaySpy = createEdocsGatewaySpy(null, null, 404);
     const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: createS3GatewaySpy()});
     const attachment = await usecase(0);
