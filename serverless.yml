@@ -39,10 +39,6 @@ functions:
           path: 'documents/{documentId}'
           method: GET
           authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
-          request:
-            parameters:
-              querystrings:
-                personId: true
 
     environment:
       stage: ${self:provider.stage}

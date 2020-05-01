@@ -43,7 +43,9 @@ const sofficePromise = isDev ? localLibreOffice() : unpackLibreOffice();
 
 const getDoc = async (event) => {
   try {
-    const doc = await getDocument(event.pathParameters.documentId, sofficePromise);
+    const documentId = event.pathParameters.documentId.split('&')[0]
+    console.log(documentId)
+    const doc = await getDocument(documentId, sofficePromise);
 
     if (!doc) return {
        statusCode: 404,
