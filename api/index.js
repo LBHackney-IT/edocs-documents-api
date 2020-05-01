@@ -45,7 +45,14 @@ const getDoc = async (event) => {
   try {
     const doc = await getDocument(event.pathParameters.documentId, sofficePromise);
 
-    if (!doc) return { statusCode: 404, body: 'Requested document does not exist' }
+    if (!doc) return {
+       statusCode: 404,
+       headers: {
+        'Cache-Control': 'no-store, no-cache',
+        'Pragma': 'no-cache'
+        },
+        body: 'Requested document does not exist'
+      }
 
     const { _mimeType, _doc, _filename, url } = doc
     
@@ -64,6 +71,10 @@ const getDoc = async (event) => {
 
     const response = {
       statusCode: 500,
+      headers: {
+        'Cache-Control': 'no-store, no-cache',
+        'Pragma': 'no-cache'
+      },
       body: err
     };
     return response;
