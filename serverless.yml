@@ -36,9 +36,12 @@ functions:
         - node_modules/**
     events:
       - http:
-          path: '{proxy+}'
+          path: /documents/{documentId}
           method: GET
           authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
+      - http:
+          path: /lbhMosaicEDocs/DocumentMenu.aspx
+          method: GET
 
     environment:
       stage: ${self:provider.stage}
