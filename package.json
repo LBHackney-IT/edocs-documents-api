@@ -4,9 +4,11 @@
   "dependencies": {
     "@shelf/aws-lambda-libreoffice": "^3.0.6",
     "dotenv": "^8.2.0",
-    "request": "^2.88.2",
+    "express": "^4.17.1",
     "node-lambda-authorizer": "LBHackney-IT/node-lambda-authorizer.git#master",
-    "request-promise": "^4.2.5"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "serverless-http": "^2.3.2"
   },
   "devDependencies": {
     "aws-sdk": "^2.664.0",
@@ -16,7 +18,7 @@
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "serverless": "^1.66.0",
-    "serverless-offline": "^5.12.1",
+    "serverless-offline": "^6.1.4",
     "serverless-offline-ssm": "^4.1.2"
   },
   "scripts": {

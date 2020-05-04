@@ -1,4 +1,7 @@
 require('dotenv').config();
+const serverless = require('serverless-http');
+const express = require('express');
+const app = express();
 const aws = require('aws-sdk');
 const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
@@ -41,48 +44,45 @@ const isDev = !(process.env.stage === "staging" || process.env.stage === "produc
 
 const sofficePromise = isDev ? localLibreOffice() : unpackLibreOffice();
 
-const getDoc = async (event) => {
+app.get('/documents/:documentId', async (req, res) => {
+  const documentId = req.params.documentId.split('&')[0]
+
+  res.set('Cache-Control', 'no-store, no-cache')
+  res.set('Pragma', 'no-cache')
+
   try {
-    const documentId = event.pathParameters.documentId.split('&')[0]
-    console.log(documentId)
-    const doc = await getDocument(documentId, sofficePromise);
+    docUrl = await getDoc(documentId, sofficePromise)
 
-    if (!doc) return {
-       statusCode: 404,
-       headers: {
-        'Cache-Control': 'no-store, no-cache',
-        'Pragma': 'no-cache'
-        },
-        body: 'Requested document does not exist'
-      }
-
-    const { _mimeType, _doc, _filename, url } = doc
-    
-    const response = {
-      statusCode: 301,
-      headers: {
-          'Location': url,
-          'Cache-Control': 'no-store, no-cache',
-          'Pragma': 'no-cache'
-      },
-      body: ''
-    };
-    return response;
+    if (!docUrl) {
+      res.status(404)
+      res.send('Requested document does not exist')
+      return
+    }
+    res.status(301)
+    res.set('Location', docUrl)
+    res.send('')
   } catch (err) {
     console.log(err);
 
-    const response = {
-      statusCode: 500,
-      headers: {
-        'Cache-Control': 'no-store, no-cache',
-        'Pragma': 'no-cache'
-      },
-      body: err
-    };
-    return response;
+    res.status(500)
+    res.send(err)
   }
+
+});
+
+app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
+  const documentId = req.query.documentId
+  res.redirect(`/documents/${documentId}`)
+})
+
+const getDoc = async (documentId, sofficePromise) => {
+    const doc = await getDocument(documentId, sofficePromise);
+
+    if (!doc) return null
+  
+    return doc.url
 }
 
-module.exports = {
-  getDoc
-}
+module.exports.handler = serverless(app, {
+  binary: ['*/*']
+});

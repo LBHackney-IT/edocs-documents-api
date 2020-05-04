@@ -17,14 +17,14 @@ provider:
       - subnet-0a7f442c22a6feedc
 
 plugins:
-  - serverless-offline
   - serverless-offline-ssm
+  - serverless-offline
 
 functions:
   getDoc:
     name: edocs-documents-api-${self:provider.stage}-getDoc
     role: arn:aws:iam::775052747630:role/LBH_Lambda_Execution
-    handler: api/index.getDoc
+    handler: api/index.handler
     memorySize: 3008
     package:
       exclude:
@@ -36,7 +36,7 @@ functions:
         - node_modules/**
     events:
       - http:
-          path: 'documents/{documentId}'
+          path: '{proxy+}'
           method: GET
           authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
 
