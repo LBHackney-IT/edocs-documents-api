@@ -5,8 +5,10 @@
     "@shelf/aws-lambda-libreoffice": "^3.0.6",
     "dotenv": "^8.2.0",
     "request": "^2.88.2",
+    "express": "^4.17.1",
     "node-lambda-authorizer": "LBHackney-IT/node-lambda-authorizer.git#master",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "serverless-http": "^2.3.2"
   },
   "devDependencies": {
     "aws-sdk": "^2.664.0",
