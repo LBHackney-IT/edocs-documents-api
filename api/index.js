@@ -77,7 +77,7 @@ app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
   });
 
   var permission = await authorizer(req)
-
+  console.log("permission:" + permission)
   if(permission === 'Unauthorized') {
     
     const fullUrl= process.env.redirectUri + req.originalUrl
