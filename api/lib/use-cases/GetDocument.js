@@ -1,6 +1,6 @@
 const mimeTypes = require("mime-types");
 const fs = require("fs");
-
+const selectFileAction = require('./SelectFileAction')
 function saveFileLocally(docBody, fileName) {
   try {
     fs.writeFileSync(`/tmp/${fileName}`, docBody);
@@ -34,7 +34,13 @@ module.exports = function(options) {
 
         var document = outputDoc.body;
 
-        if (extension === "doc" || extension === "docx") {
+        const fileAction = selectFileAction(extension)
+        
+        if (fileAction === 'unsupported') {
+          throw new Error('This document cannot be viewed in your browser, please open in Mosaic on VDI.')
+        }
+
+        if (fileAction === 'convert') {
           var fileName = saveFileLocally(
             document,
             `${documentId}.${extension}`
@@ -72,7 +78,7 @@ module.exports = function(options) {
       } catch (err) {
         console.log(`Error: couldn't find document with id: ${documentId}`);
         console.log(err);
-        return null;
+        return err;
       }
     }
 
