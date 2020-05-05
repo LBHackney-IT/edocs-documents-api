@@ -7,6 +7,7 @@ const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
   apiKey: process.env.EDOCS_API_KEY
 });
+const authorizer = require('./authorizer.js')
 
 var s3Gateway
 
@@ -71,6 +72,13 @@ app.get('/documents/:documentId', async (req, res) => {
 });
 
 app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
+  var permission = await authorizer(req)
+
+  if(permission === 'Unauthorized') {
+    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    return res.redirect(`http://auth.hackney.gov.uk/auth?redirect_uri=${fullUrl}`)
+  }
+
   const documentId = req.query.documentId
   res.redirect(`/documents/${documentId}`)
 })
