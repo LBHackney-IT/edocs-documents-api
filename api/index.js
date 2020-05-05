@@ -79,7 +79,9 @@ app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
   var permission = await authorizer(req)
 
   if(permission === 'Unauthorized') {
-    const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    
+    const fullUrl= process.env.redirectUri + req.originalUrl
+
     return res.redirect(`http://auth.hackney.gov.uk/auth?redirect_uri=${fullUrl}`)
   }
 
