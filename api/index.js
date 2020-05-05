@@ -7,7 +7,6 @@ const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
   apiKey: process.env.EDOCS_API_KEY
 });
-const authorizer = require('./authorizer.js')
 
 var s3Gateway
 
@@ -72,6 +71,11 @@ app.get('/documents/:documentId', async (req, res) => {
 });
 
 app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
+  const authorizer = require('node-lambda-authorizer')({ 
+    jwtSecret: process.env.jwtsecret, 
+    allowedGroups: process.env.allowedGroups.split(",") 
+  });
+
   var permission = await authorizer(req)
 
   if(permission === 'Unauthorized') {

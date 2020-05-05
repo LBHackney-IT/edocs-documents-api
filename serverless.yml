@@ -49,7 +49,7 @@ functions:
       EDOCS_API_URL: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-url}
       S3_BUCKET_NAME: edocs-documents-${self:provider.stage}
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
-      allowedGroups: ${self:provider.stage}-edocs-web-access
+      allowedGroups: edocs-web-access-${self:provider.stage}
   
   edocs-documents-api-authorizer:
     name: edocs-documents-api-authorizer-${self:provider.stage}
@@ -57,7 +57,7 @@ functions:
     handler: api/authorizer.handler
     environment:
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
-      allowedGroups: ${self:provider.stage}-edocs-web-access
+      allowedGroups: edocs-web-access-${self:provider.stage}
 
 resources:
     Resources:
