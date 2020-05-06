@@ -3,6 +3,14 @@ const serverless = require('serverless-http');
 const express = require('express');
 const app = express();
 const aws = require('aws-sdk');
+const authorizer = require('node-lambda-authorizer')({ 
+  jwtSecret: process.env.jwtsecret, 
+  allowedGroups: process.env.allowedGroups.split(",") 
+});
+const dbConfig = require('./lib/DynamoDbConfig')(process.env);
+const dbGateway = require('./lib/gateways/DynamoDbGateway')(dbConfig);
+const logDocumentAccess = require('./lib/use-cases/LogDocumentAccess')({ dbGateway })
+
 const edocsGateway = require('./lib/gateways/EdocsGateway')({
   edocsServerUrl: process.env.EDOCS_API_URL,
   apiKey: process.env.EDOCS_API_KEY
@@ -58,9 +66,17 @@ app.get('/documents/:documentId', async (req, res) => {
       res.send('Requested document does not exist')
       return
     }
-    res.status(301)
-    res.set('Location', docUrl)
-    res.send('')
+    const payload = authorizer.getTokenPayload(req)
+
+    if (payload && payload.name && payload.email) {
+      await logDocumentAccess(documentId, payload.name, payload.email)
+      res.status(301)
+      res.set('Location', docUrl)
+      res.send('')
+    } else {
+      res.status(400)
+      res.send("Couldn't find name and email in request")
+    }
   } catch (err) {
     console.log(err);
 
@@ -71,12 +87,8 @@ app.get('/documents/:documentId', async (req, res) => {
 });
 
 app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
-  const authorizer = require('node-lambda-authorizer')({ 
-    jwtSecret: process.env.jwtsecret, 
-    allowedGroups: process.env.allowedGroups.split(",") 
-  });
 
-  var permission = await authorizer(req)
+  var permission = await authorizer.handler(req)
 
   if(permission === 'Unauthorized') {
     
