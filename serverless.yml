@@ -7,6 +7,11 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: eu-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource: "*"
   stage: ${opt:stage, 'dev'}
   timeout: 15
   apiGateway:
@@ -51,7 +56,7 @@ functions:
       stage: ${self:provider.stage}
       EDOCS_API_KEY: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-key~true}
       EDOCS_API_URL: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-url}
-      S3_BUCKET_NAME: edocs-documents-${self:provider.stage}
+      S3_BUCKET_NAME: edocs-documents-staging
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
       allowedGroups: ${ssm:/edocs-api/${self:provider.stage}/allowedGroups}
       redirectUri: ${ssm:/edocs-api/${self:provider.stage}/redirectUri}
