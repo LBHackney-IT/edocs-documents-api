@@ -7,11 +7,6 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: eu-west-2
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-      Resource: "*"
   stage: ${opt:stage, 'dev'}
   timeout: 15
   apiGateway:
