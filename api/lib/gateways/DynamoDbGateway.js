@@ -17,7 +17,7 @@ module.exports = function({ client, tables }) {
             userEmail
           }
         })
-        .promise;
+        .promise();
       } catch (err) {
         console.log(err)
       }
