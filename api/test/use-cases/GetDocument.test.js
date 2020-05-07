@@ -124,5 +124,54 @@ describe('GetDocument', function() {
     expect(attachment.url).toBe('http://dummy-url.com/?')
     expect(attachment.extension).toBe('pdf')
   });
+
+  it('does not call converter for unsupported extension', async function() {
+    const documentId = 3;
+    const document = 'document';
+    const edocsGatewaySpy = createEdocsGatewaySpy(document, 'application/x-tar');
+    const s3GatewaySpy = createS3GatewaySpy()
+    const converterSpy = createConverterSpy()
+    const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: s3GatewaySpy, converter: converterSpy });
+
+    await expect(usecase(documentId, null)).rejects.toEqual(new Error('This document cannot be viewed in your browser, please open in Mosaic on VDI.'))
+  });
+
+  it('does not call converter for web native extension', async function() {
+    const documentId = 4;
+    const document = 'document';
+    const edocsGatewaySpy = createEdocsGatewaySpy(document, 'application/pdf');
+    const s3GatewaySpy = createS3GatewaySpy()
+    const converterSpy = createConverterSpy()
+    const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: s3GatewaySpy, converter: converterSpy });
+    
+    const attachment = await usecase(documentId, null);
+
+    expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
+    expect(s3GatewaySpy.get).toHaveBeenCalledWith(documentId);
+    expect(converterSpy.execute).toHaveBeenCalledTimes(0)
+
+    expect(attachment.doc.toString()).toBe(document);
+    expect(attachment.url).toBe('http://dummy-url.com/?')
+    expect(attachment.extension).toBe('pdf')
+  });
+
+  it('does call converter for ppt extension', async function() {
+    const documentId = 4;
+    const document = 'document';
+    const edocsGatewaySpy = createEdocsGatewaySpy(document, 'application/vnd.ms-powerpoint');
+    const s3GatewaySpy = createS3GatewaySpy()
+    const converterSpy = createConverterSpy()
+    const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: s3GatewaySpy, converter: converterSpy });
+    
+    const attachment = await usecase(documentId, null);
+
+    expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
+    expect(s3GatewaySpy.get).toHaveBeenCalledWith(documentId);
+    expect(converterSpy.execute).toHaveBeenCalledTimes(1)
+    expect(converterSpy.execute).toHaveBeenCalledWith('4.ppt', null)
+    expect(attachment.doc.toString()).toBe(document);
+    expect(attachment.url).toBe('http://dummy-url.com/?')
+    expect(attachment.extension).toBe('pdf')
+  });
 })
  

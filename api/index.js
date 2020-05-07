@@ -59,9 +59,9 @@ app.get('/documents/:documentId', async (req, res) => {
   res.set('Pragma', 'no-cache')
 
   try {
-    docUrl = await getDoc(documentId, sofficePromise)
+    doc = await getDocument(documentId, sofficePromise)
 
-    if (!docUrl) {
+    if (!doc.url) {
       res.status(404)
       res.send('Requested document does not exist')
       return
@@ -71,17 +71,16 @@ app.get('/documents/:documentId', async (req, res) => {
     if (payload && payload.name && payload.email) {
       await logDocumentAccess(documentId, payload.name, payload.email)
       res.status(301)
-      res.set('Location', docUrl)
+      res.set('Location', doc.url)
       res.send('')
     } else {
       res.status(400)
       res.send("Couldn't find name and email in request")
     }
   } catch (err) {
-    console.log(err);
-
+    console.log(err)
     res.status(500)
-    res.send(err)
+    res.send(err.toString())
   }
 
 });
@@ -99,20 +98,12 @@ app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
     
     const fullUrl= process.env.redirectUri + req.originalUrl
 
-    return res.redirect(`http://auth.hackney.gov.uk/auth?redirect_uri=${fullUrl}`)
+    return res.redirect(`${process.env.googleAuthRedirectUri}${fullUrl}`)
   }
 
   const documentId = req.query.documentId
   res.redirect(`/documents/${documentId}`)
 })
-
-const getDoc = async (documentId, sofficePromise) => {
-    const doc = await getDocument(documentId, sofficePromise);
-
-    if (!doc) return null
-  
-    return doc.url
-}
 
 module.exports.handler = serverless(app, {
   binary: ['*/*']
