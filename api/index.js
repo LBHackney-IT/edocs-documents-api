@@ -60,12 +60,7 @@ app.get('/documents/:documentId', async (req, res) => {
 
   try {
     doc = await getDocument(documentId, sofficePromise)
-
-    if (!doc.url) {
-      res.status(404)
-      res.send('Requested document does not exist')
-      return
-    }
+    
     const payload = authorizer.getTokenPayload(req)
 
     if (payload && payload.name && payload.email) {
@@ -78,9 +73,8 @@ app.get('/documents/:documentId', async (req, res) => {
       res.send("Couldn't find name and email in request")
     }
   } catch (err) {
-    console.log(err)
-    res.status(500)
-    res.send(err.toString())
+    res.status(err.statusCode)
+    res.send(err.message)
   }
 
 });

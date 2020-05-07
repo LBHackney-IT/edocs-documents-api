@@ -20,7 +20,8 @@ module.exports = function(options) {
           };
         }
       } catch (err) {
-        if (err.code !== "NoSuchKey") console.log(err);
+        if (err.code !== "NoSuchKey") console.log(err)
+        throw err
       }
     },
     getUrl: async function(id, mimeType, extension) {
