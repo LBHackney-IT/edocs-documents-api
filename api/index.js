@@ -90,6 +90,11 @@ app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
 
   var permission = await authorizer.handler(req)
 
+  if(permission === 'Not Allowed') {
+    res.status(403)
+    return res.send("You don't have permission to use this service, please contact a google admin to see if you are in the correct usergroup")
+  }
+
   if(permission === 'Unauthorized') {
     
     const fullUrl= process.env.redirectUri + req.originalUrl
