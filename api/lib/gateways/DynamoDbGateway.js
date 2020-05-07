@@ -8,20 +8,19 @@ module.exports = function({ client, tables }) {
     ) {
       try {
         await client
-        .put({
-          TableName: tables.accessLogsTable,
-          Item: {
-            documentId,
-            accessTime: accessTime.toISOString(),
-            userName,
-            userEmail
-          }
-        })
-        .promise();
+          .put({
+            TableName: tables.accessLogsTable,
+            Item: {
+              documentId,
+              accessTime: accessTime.toISOString(),
+              userName,
+              userEmail
+            }
+          })
+          .promise();
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-      
     }
   };
 };

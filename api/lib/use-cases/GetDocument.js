@@ -1,6 +1,6 @@
 const mimeTypes = require("mime-types");
 const fs = require("fs");
-const selectFileAction = require('./SelectFileAction')
+const selectFileAction = require("./SelectFileAction");
 function saveFileLocally(docBody, fileName) {
   try {
     fs.writeFileSync(`/tmp/${fileName}`, docBody);
@@ -26,7 +26,9 @@ module.exports = function(options) {
 
       try {
         outputDoc = await edocsGateway.getDocument(documentId);
-        console.log(`Document with id: ${documentId} fetched from edocs gateway`);
+        console.log(
+          `Document with id: ${documentId} fetched from edocs gateway`
+        );
       } catch (err) {
         console.log(`Document with id: ${documentId} not found in edocs`);
         throw err;
@@ -39,17 +41,16 @@ module.exports = function(options) {
 
       var document = outputDoc.body;
 
-      const fileAction = selectFileAction(extension)
-      
-      if (fileAction === 'unsupported') {
-        throw new Error('This document cannot be viewed in your browser, please open in Mosaic on VDI.')
+      const fileAction = selectFileAction(extension);
+
+      if (fileAction === "unsupported") {
+        throw new Error(
+          "This document cannot be viewed in your browser, please open in Mosaic on VDI."
+        );
       }
 
-      if (fileAction === 'convert') {
-        var fileName = saveFileLocally(
-          document,
-          `${documentId}.${extension}`
-        );
+      if (fileAction === "convert") {
+        var fileName = saveFileLocally(document, `${documentId}.${extension}`);
 
         try {
           fileName = await convertDocument.execute(fileName, sofficePromise);
