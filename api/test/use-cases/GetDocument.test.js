@@ -133,7 +133,7 @@ describe('GetDocument', function() {
     const converterSpy = createConverterSpy()
     const usecase = GetDocument({ edocsGateway: edocsGatewaySpy, s3Gateway: s3GatewaySpy, converter: converterSpy });
 
-    await expect(usecase(documentId, null)).resolves.toEqual(new Error('This document cannot be viewed in your browser, please open in Mosaic on VDI.'))
+    await expect(usecase(documentId, null)).rejects.toEqual(new Error('This document cannot be viewed in your browser, please open in Mosaic on VDI.'))
   });
 
   it('does not call converter for web native extension', async function() {
