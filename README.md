@@ -12,6 +12,12 @@ The Edocs Documents API consits of 2 services:
 - `/authorizer` handles authentication
 - The API is deployed as an AWS lambda via [serverless](https://serverless.com/).
 
+## Dev Dependencies
+- npm install --save-dev serverless-dynamodb-local
+- npm install -g serverless
+- npm install -g dynamodb-admin
+- npm install jest
+
 ## Setup
 
 1. Copy `.env.example` to `.env` and fill in the secrets

@@ -4,9 +4,9 @@
   "dependencies": {
     "@shelf/aws-lambda-libreoffice": "^3.0.6",
     "dotenv": "^8.2.0",
-    "request": "^2.88.2",
     "express": "^4.17.1",
-    "node-lambda-authorizer": "LBHackney-IT/node-lambda-authorizer.git#master",
+    "node-lambda-authorizer": "github:LBHackney-IT/node-lambda-authorizer#master",
+    "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "serverless-http": "^2.3.2"
   },
@@ -18,12 +18,13 @@
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "serverless": "^1.66.0",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-offline": "^5.12.1",
     "serverless-offline-ssm": "^4.1.2"
   },
   "scripts": {
-    "start": "AWS_PROFILE=hackney sls offline start -s dev --noAuth --noTimeout --port 3000",
-    "start-with-auth": "AWS_PROFILE=hackney sls offline start -s dev --noTimeout --port 3000",
+    "start": "AWS_PROFILE=hackney sls offline start -s dev --noAuth --noTimeout",
+    "start-with-auth": "AWS_PROFILE=hackney sls offline start -s dev --noTimeout",
     "debug": "export SLS_DEBUG=* && AWS_PROFILE=hackney node --inspect ./node_modules/serverless/bin/serverless offline -s dev --noAuth --noTimeout --port 3002",
     "lint": "eslint --fix --ext js api/lib && echo 'Lint complete.'",
     "test": "jest",
