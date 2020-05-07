@@ -44,14 +44,14 @@ functions:
           method: GET
           authorizer: ${self:custom.authorizer.edocs-documents-api-authorizer}
       - http:
-          path: /lbhMosaicEDocs/DocumentMenu.aspx
+          path: /LbhMosaicEDocs/DocumentMenu.aspx
           method: GET
 
     environment:
       stage: ${self:provider.stage}
       EDOCS_API_KEY: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-key~true}
       EDOCS_API_URL: ${ssm:/edocs-api/${self:provider.stage}/edocs-api-url}
-      S3_BUCKET_NAME: edocs-documents-staging
+      S3_BUCKET_NAME: edocs-documents-${self:provider.stage}
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
       allowedGroups: ${ssm:/edocs-api/${self:provider.stage}/allowedGroups}
       redirectUri: ${ssm:/edocs-api/${self:provider.stage}/redirectUri}

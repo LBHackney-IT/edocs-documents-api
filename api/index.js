@@ -85,7 +85,7 @@ app.get('/documents/:documentId', async (req, res) => {
 
 });
 
-app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
+app.get('/LbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
 
   var permission = await authorizer.handler(req)
 
