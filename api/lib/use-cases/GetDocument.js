@@ -78,7 +78,7 @@ module.exports = function(options) {
       } catch (err) {
         console.log(`Error: couldn't find document with id: ${documentId}`);
         console.log(err);
-        return err;
+        throw err;
       }
     }
 
