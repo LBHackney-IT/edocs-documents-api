@@ -8,7 +8,7 @@ jspm_packages
 *npm-debug.log*
 *tmp
 /authorizer/event.json
-
+.dynamodb
 
 # Serverless directories
 *.serverless

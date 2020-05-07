@@ -82,7 +82,7 @@ app.get('/lbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
     
     const fullUrl= process.env.redirectUri + req.originalUrl
 
-    return res.redirect(`http://auth.hackney.gov.uk/auth?redirect_uri=${fullUrl}`)
+    return res.redirect(`${process.env.googleAuthRedirectUri}${fullUrl}`)
   }
 
   const documentId = req.query.documentId

@@ -51,6 +51,7 @@ functions:
       jwtsecret: ${ssm:/common/hackney-jwt-secret}
       allowedGroups: ${ssm:/edocs-api/${self:provider.stage}/allowedGroups}
       redirectUri: ${ssm:/edocs-api/${self:provider.stage}/redirectUri}
+      googleAuthRedirectUri: ${ssm:/common/google-auth-redirect-uri}
   
   edocs-documents-api-authorizer:
     name: edocs-documents-api-authorizer-${self:provider.stage}
