@@ -73,10 +73,16 @@ app.get('/documents/:documentId', async (req, res) => {
       res.send("Couldn't find name and email in request")
     }
   } catch (err) {
-    res.status(err.statusCode)
-    res.send(err.message)
+    if (err.statusCode === 400) {
+      res.status(err.statusCode)
+      return res.send('Bad Request. :(')
+    } else if (err.statusCode === 404) {
+      res.status(err.statusCode)
+      return res.send('Requested document could not be found.')
+    } 
+    res.status(500)
+    res.send('Internal server error')
   }
-
 });
 
 app.get('/LbhMosaicEDocs/DocumentMenu.aspx', async (req, res) => {
