@@ -15,17 +15,6 @@ const createEdocsGatewaySpy = (document, contentType, statusCode) => {
 
 const createS3GatewaySpy = document => {
   return {
-    get: jest.fn((id) => {
-      if (id === 1) {
-        return {
-          doc: 'cached document',
-          mimeType: 'text/xml',
-          extension: 'xml',
-          url: 'www.cachedDocumentUrl.com'
-        }
-      }
-      return null;
-    }),
     put: jest.fn(() => {
       return {
         promise: () => {
@@ -100,8 +89,6 @@ describe('GetDocument', function() {
   
     const attachment = await usecase(cachedDocumentId);
     
-    expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
-    expect(s3GatewaySpy.get).toHaveBeenCalledWith(cachedDocumentId);
     expect(attachment.doc).toBe(cachedDocument);
     expect(attachment.url).toBe('www.cachedDocumentUrl.com')
   });
@@ -116,8 +103,6 @@ describe('GetDocument', function() {
   
     const attachment = await usecase(cachedDocumentId, null);
     
-    expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
-    expect(s3GatewaySpy.get).toHaveBeenCalledWith(cachedDocumentId);
     expect(converterSpy.execute).toHaveBeenCalledTimes(1)
     expect(converterSpy.execute).toHaveBeenCalledWith('2.doc', null)
     expect(attachment.doc.toString()).toBe(cachedDocument);
@@ -146,10 +131,7 @@ describe('GetDocument', function() {
     
     const attachment = await usecase(documentId, null);
 
-    expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
-    expect(s3GatewaySpy.get).toHaveBeenCalledWith(documentId);
     expect(converterSpy.execute).toHaveBeenCalledTimes(0)
-
     expect(attachment.doc.toString()).toBe(document);
     expect(attachment.url).toBe('http://dummy-url.com/?')
     expect(attachment.extension).toBe('pdf')
@@ -165,8 +147,6 @@ describe('GetDocument', function() {
     
     const attachment = await usecase(documentId, null);
 
-    expect(s3GatewaySpy.get).toHaveBeenCalledTimes(1);
-    expect(s3GatewaySpy.get).toHaveBeenCalledWith(documentId);
     expect(converterSpy.execute).toHaveBeenCalledTimes(1)
     expect(converterSpy.execute).toHaveBeenCalledWith('4.ppt', null)
     expect(attachment.doc.toString()).toBe(document);
