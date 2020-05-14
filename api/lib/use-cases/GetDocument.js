@@ -19,69 +19,63 @@ module.exports = function(options) {
   const convertDocument = options.converter;
 
   return async function(documentId, sofficePromise) {
-    let doc = await s3Gateway.get(documentId);
+    var outputDoc;
 
-    if (!doc) {
-      var outputDoc;
+    try {
+      outputDoc = await edocsGateway.getDocument(documentId);
+      console.log(`Document with id: ${documentId} fetched from edocs gateway`);
+    } catch (err) {
+      console.log(`Document with id: ${documentId} not found in edocs`);
+      throw err;
+    }
+
+    if (outputDoc.statusCode != 200) return null;
+
+    var mimeType = outputDoc.headers["content-type"];
+    var extension = mimeTypes.extension(mimeType);
+
+    var document = outputDoc.body;
+
+    const fileAction = selectFileAction(extension);
+
+    if (fileAction === "unsupported") {
+      throw new Error(
+        "This document cannot be viewed in your browser, please open in Mosaic on VDI."
+      );
+    }
+
+    if (fileAction === "convert") {
+      var fileName = saveFileLocally(document, `${documentId}.${extension}`);
 
       try {
-        outputDoc = await edocsGateway.getDocument(documentId);
-        console.log(
-          `Document with id: ${documentId} fetched from edocs gateway`
-        );
+        fileName = await convertDocument.execute(fileName, sofficePromise);
+        console.log("File converted successfully");
       } catch (err) {
-        console.log(`Document with id: ${documentId} not found in edocs`);
+        console.log(err);
+        console.log("File not converted");
         throw err;
       }
 
-      if (outputDoc.statusCode != 200) return null;
+      extension = fileName.split(".").pop();
 
-      var mimeType = outputDoc.headers["content-type"];
-      var extension = mimeTypes.extension(mimeType);
+      try {
+        document = fs.readFileSync(`/tmp/${fileName}`);
 
-      var document = outputDoc.body;
-
-      const fileAction = selectFileAction(extension);
-
-      if (fileAction === "unsupported") {
-        throw new Error(
-          "This document cannot be viewed in your browser, please open in Mosaic on VDI."
-        );
+        mimeType = "application/pdf";
+      } catch (err) {
+        console.log(err);
+        console.log("File not read");
+        throw err;
       }
-
-      if (fileAction === "convert") {
-        var fileName = saveFileLocally(document, `${documentId}.${extension}`);
-
-        try {
-          fileName = await convertDocument.execute(fileName, sofficePromise);
-          console.log("File converted successfully");
-        } catch (err) {
-          console.log(err);
-          console.log("File not converted");
-          throw err;
-        }
-
-        extension = fileName.split(".").pop();
-
-        try {
-          document = fs.readFileSync(`/tmp/${fileName}`);
-
-          mimeType = "application/pdf";
-        } catch (err) {
-          console.log(err);
-          console.log("File not read");
-          throw err;
-        }
-      }
-      doc = {
-        mimeType,
-        extension,
-        doc: document,
-        filename: `${documentId}.${extension}`
-      };
-
-      await s3Gateway.put(documentId, doc);
     }
+    var doc = {
+      mimeType,
+      extension,
+      doc: document,
+      filename: `${documentId}.${extension}`
+    };
+
+    await s3Gateway.put(documentId, doc);
 
     doc.url = await s3Gateway.getUrl(documentId, doc.mimeType, doc.extension);
 
