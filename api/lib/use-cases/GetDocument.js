@@ -38,8 +38,17 @@ module.exports = function(options) {
 
     const fileAction = selectFileAction(extension);
 
+    class ConversionError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "ConversionError";
+        this.statusCode = 500
+      }
+    }
+    
     if (fileAction === "unsupported") {
-      throw new Error(
+      console.log(`Document: ${documentId}.${extension} is an unsupported file type, please open in Mosaic on VDI.`)
+      throw new ConversionError(
         "This document cannot be viewed in your browser, please open in Mosaic on VDI."
       );
     }

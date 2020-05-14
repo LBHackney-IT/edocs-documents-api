@@ -75,10 +75,14 @@ app.get('/documents/:documentId', async (req, res) => {
   } catch (err) {
     if (err.statusCode === 400) {
       res.status(err.statusCode)
-      return res.send('Bad Request. :(')
-    } else if (err.statusCode === 404) {
+      return res.send('Bad Request.')
+    } 
+    else if (err.statusCode === 404) {
       res.status(err.statusCode)
       return res.send('Requested document could not be found.')
+    } else if (err.name === 'ConversionError') {
+      res.status(err.statusCode)
+      return res.send(err.message)
     } 
     res.status(500)
     res.send('Internal server error')
